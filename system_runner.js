@@ -16,6 +16,8 @@ let songEpoch = 0;              // millis when song starts
 let table;
 let words;
 
+
+
 function songLoadedError() {
   songButton.elt.innerHTML = "Song: Load Error";
   print(songButton.elt.innerHTML);
