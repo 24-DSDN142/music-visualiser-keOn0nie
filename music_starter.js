@@ -43,42 +43,42 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   let numSquares = map(other, 0,100,0,7);
 
   
-//   if (counter < 1280) {
+  if (counter < 1280) {
 
-//   for (let i = 0; i < 25; i++) {
-//     for (let j = 0; j < 8; j++) {
-//       //setting the fill colour based on the current column
-//       if (i === currentColumn) {
-//         stroke(100); // white in HSB
-//       } else if (i === leftColumn1 || i === rightColumn1) {
-//         stroke(50);
-//       } else if (i === leftColumn2 || i === rightColumn2) {
-//         stroke(25);
-//       }else if (i === leftColumn3 || i === rightColumn3) {
-//         stroke(12);
-//       } else if (i === leftColumn4 || i === rightColumn4) {
-//         stroke(6);
-//        } else {
-//         stroke (0); //black colour HSB
-//        }
+  for (let i = 0; i < 25; i++) {
+    for (let j = 0; j < 8; j++) {
+      //setting the fill colour based on the current column
+      if (i === currentColumn) {
+        stroke(100); // white in HSB
+      } else if (i === leftColumn1 || i === rightColumn1) {
+        stroke(50);
+      } else if (i === leftColumn2 || i === rightColumn2) {
+        stroke(25);
+      }else if (i === leftColumn3 || i === rightColumn3) {
+        stroke(12);
+      } else if (i === leftColumn4 || i === rightColumn4) {
+        stroke(6);
+       } else {
+        stroke (0); //black colour HSB
+       }
        
-//       drawWind(startX + i * totalWidth, startY + j * totalHeight);
-//     }
-//   }
-//   let opacity = map(counter, 0, 800, 100, 0);
+      drawWind(startX + i * totalWidth, startY + j * totalHeight);
+    }
+  }
+  let opacity = map(counter, 0, 800, 100, 0);
 
-//   fill(0, opacity);
-//   noStroke();
-//   rect(0, 0, 800, 800);
-//   }
+  fill(0, opacity);
+  noStroke();
+  rect(0, 0, 800, 800);
+  }
 
 
-// if (counter > 1360) {
+if (counter > 1360) {
   drawPreVerse(RectSize1, RectSize2, RectSize3, RectSize4, RectSize5, numSquares, other);
 
 }
 
-// }
+}
 
 
 
