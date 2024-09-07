@@ -50,10 +50,13 @@ function preload() {
 let volumes = [];
 let volume_length = 0;
 
+let grain;
 function setup() {
   main_canvas = createCanvas(canvasWidth, canvasHeight);
   main_canvas.parent('canvasContainer');
   song = loadSound('song.mp3', songLoaded, songLoadedError, songLoadedSoFar);  
+
+  
   
   frameRate(60);
   angleMode(DEGREES);
