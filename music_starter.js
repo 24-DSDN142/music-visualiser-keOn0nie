@@ -14,11 +14,266 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   textFont('Verdana'); // please use CSS safe fonts
   // rectMode(CENTER)
   textSize(24);
-
   fill(255);
   text(`Frames: ${counter}`, 10, 30);
 
+  // if (counter > 4070) {
+    drawPreChorus(vocal, bass, other, drum, counter);
+// }
+//   else if (counter > 2700) {
+//   drawVerse(vocal, other, counter);
+// } 
+//   else if (counter > 1360 && counter <= 2700) {
+//   drawPreVerse(vocal, other, counter);
+// }
+//   else if (counter < 1280) {
+//   drawWindGrid(counter, other);
+// }
+// }
 
+}
+ 
+ 
+function drawBridge(vocal, other) {
+
+
+}
+
+
+function drawPreChorus(vocal, bass, other, drum, counter, x, y) {
+  push();
+  colorMode(RGB);
+
+  const numCircles = 16;
+  const radius = 150;
+  const centerX = 400;
+  const centerY = 400;
+  const angleStep = 360 / numCircles;
+
+  let lerpFactor2 = map(counter, 4070, 5420, 0, 1); 
+  let fromColor2 = color(200, 200, 80); //yellow
+  let toColor2 = color(80, 172, 200); //blue
+
+  for(let i = 0; i < numCircles; i++) {
+    let angle = counter * 0.05 + i * angleStep;
+    let x = centerX + radius * cos(angle);
+    let y = centerY + radius * sin(angle);
+
+    let circleSize = map(other, 0, 100, 10, 40);
+    let lerpedColor2 = lerpColor(fromColor2, toColor2, lerpFactor2);
+
+   
+
+    fill(lerpedColor2);
+    noStroke();
+    ellipse(x, y, circleSize, circleSize);
+
+  }
+  
+  const diamondRadius = 200;
+  let lerpFactor3 = map(counter, 4070, 5420, 0, 1);
+  let fromColor3 = color(255, 79, 79);
+  let toColor3 = color(250, 52, 52);
+
+  for (let i = 0; i < numCircles; i++) {
+    let angle = counter * 0.1 + i * angleStep;
+    let x = centerX + diamondRadius * cos(angle);
+    let y = centerY + diamondRadius * sin(angle);
+
+    let rectSize = map(bass, 0, 100, 5, 40);
+    let lerpedColor3 = lerpColor(fromColor3, toColor3, lerpFactor3);
+
+   if (counter > 4420) {
+    noStroke();
+    for (let glowLayer = 5; glowLayer > 0; glowLayer--) {
+      fill(red(lerpedColor3), green(lerpedColor3), blue(lerpedColor3), 50 / glowLayer);
+      push();
+      translate(x, y);
+      rotate(PI / 4);
+      rectMode(CENTER);
+      rect(0, 0, rectSize + glowLayer * 8, rectSize + glowLayer * 8);
+      pop();
+    }
+  }
+    fill(lerpedColor3);
+    noStroke();
+
+    push();
+    translate(x, y);
+    rotate(PI / 4);
+    rectMode(CENTER);
+    rect(0, 0, rectSize, rectSize);
+    pop();
+  }
+  
+  let crossSize = map(vocal, 0, 100, 5, 50);
+  let VocalCircleSize = map(vocal, 0, 100, 1, 10);
+  let glowIntensity = map(drum, 0, 100, 0, 150);
+
+
+  stroke('#949fff')
+  drawCrossBig(400, 400, crossSize); //from PreVerse
+ 
+  drawCrossBig(400, 300, crossSize); 
+  stroke('#91ffff')
+  drawCrossBig(480, 360, crossSize);
+  drawCrossBig(370, 350, crossSize);
+  drawCrossBig(340, 390, crossSize);
+  stroke('#ff91fb');
+  drawCrossBig(330, 440, crossSize);
+  drawCrossBig(370, 460, crossSize);
+  drawCrossBig(420, 360, crossSize);
+  stroke('#c3ff91')
+  drawCrossBig(450, 440, crossSize);
+  drawCrossBig(360, 420, crossSize);
+  stroke(255);
+  drawCrossBig(360, 370, crossSize);
+  drawCrossBig(450, 350, crossSize);
+  stroke('#ff9191')
+  drawCrossBig(480, 400, crossSize);
+  stroke('#949fff')
+  drawCrossBig(480, 450, crossSize);
+
+  stroke('#ff91fb');
+  drawCrossSmall(370, 370, crossSize); //from PreVerse
+  stroke('#91ffff')
+  drawCrossSmall(430, 370, crossSize); //from PreVerse
+  stroke('#c3ff91')
+  drawCrossSmall(430, 430, crossSize); //from PreVerse
+  stroke('#ff9191')
+  drawCrossSmall(370, 430, crossSize); //from PreVerse
+  
+  
+  stroke('#ff91fb');
+  drawCrossSmall(450, 400, crossSize);
+  drawCrossSmall(440, 330, crossSize);
+  drawCrossSmall(400, 370, crossSize);
+  stroke('#ff9191')
+  drawCrossSmall(320, 330, crossSize);
+  drawCrossSmall(290, 370, crossSize);
+  stroke('#949fff')
+  drawCrossSmall(440, 470, crossSize);
+
+ 
+
+  stroke('#c3ff91')
+  fill('#c3ff91');
+  ellipse(390, 400, VocalCircleSize, VocalCircleSize);
+  stroke('#ff91fb');
+  fill('#ff91fb');
+  ellipse(330, 370, VocalCircleSize, VocalCircleSize);
+  stroke(255);
+  fill(255);
+  ellipse(415, 305, VocalCircleSize, VocalCircleSize);
+  ellipse(460, 445, VocalCircleSize, VocalCircleSize);
+  ellipse(460, 390, VocalCircleSize, VocalCircleSize);
+  ellipse(420, 450, VocalCircleSize, VocalCircleSize);
+
+  pop();
+}
+
+
+
+
+function drawCrossBig(x, y, size) {
+  strokeWeight(4);
+  line(x, y - size / 2, x, y + size / 2);
+  line(x - size / 2, y, x + size / 2, y);
+}
+
+function drawVerse(vocal, other, counter, x, y) {
+  push();
+  colorMode(RGB);
+
+ const numCircles = 16;
+ const radius = 100;
+ const centerX = 400;
+ const centerY = 400;
+ const angleStep = 360 / numCircles;
+
+ let lerpFactor = map(counter, 2700, 4070, 0, 1);
+//  let lerpFactor = map(counter, 0, 1700, 0, 1); //testing lerp
+
+ let fromColor = color(200, 80, 80); //orange
+ let toColor = color(200, 200, 80); //yellow
+
+
+  
+
+ for (let i = 0; i < numCircles; i++) {
+  let angle = counter * 0.05 + i * angleStep;
+  let x = centerX + radius * cos(angle);
+  let y = centerY + radius * sin(angle);
+  
+  let circleSize = map(other, 0, 100, 10, 40);
+
+  let lerpedColor = lerpColor(fromColor, toColor, lerpFactor);
+  
+  
+
+  fill(lerpedColor);
+  noStroke();
+  ellipse(x, y, circleSize, circleSize);
+ }
+
+  let crossSize = map(vocal, 0, 100, 5, 50);
+  let circleSize = map(vocal, 0, 100, 1, 10);
+
+  stroke('#949fff')
+  drawCrossBig(400, 400, crossSize); //from PreVerse
+ 
+
+  
+  
+
+
+  stroke('#ff91fb');
+  drawCrossSmall(370, 370, crossSize); //from PreVerse
+  stroke('#91ffff')
+  drawCrossSmall(430, 370, crossSize); //from PreVerse
+  stroke('#c3ff91')
+  drawCrossSmall(430, 430, crossSize); //from PreVerse
+  stroke('#ff9191')
+  drawCrossSmall(370, 430, crossSize); //from PreVerse
+  
+  stroke('#ff91fb');
+  drawCrossSmall(450, 400, crossSize);
+
+  stroke('#c3ff91')
+  fill('#c3ff91');
+  ellipse(370, 400, circleSize, circleSize);
+  stroke('#ff91fb');
+  fill('#ff91fb');
+  ellipse(410, 360, circleSize, circleSize);
+  
+  
+
+pop();
+}
+
+function drawPreVerse(vocal, other, counter) {
+  push();
+  colorMode(RGB);
+   drawOrganRectangles(other);
+   
+   let crossSize = map(vocal, 0, 100, 5, 50);
+   
+   stroke('#949fff')
+   drawCrossBig(400, 400, crossSize); //consistent
+ 
+   stroke('#ff91fb');
+   drawCrossSmall(370, 370, crossSize); //consistent
+   stroke('#91ffff')
+   drawCrossSmall(430, 370, crossSize); //consistent
+   stroke('#c3ff91')
+   drawCrossSmall(430, 430, crossSize); //consistent
+   stroke('#ff9191')
+   drawCrossSmall(370, 430, crossSize); //consistent
+   
+ pop();
+ }
+
+ function drawWindGrid(counter, other) {
   let windWidth = 20; // Width of each pattern
   let windHeight = 20; // Height of each pattern
   let gap = 10;
@@ -48,51 +303,44 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
 
   let numSquares = map(other, 0,100,0,7);
 
-  
-//   if (counter < 1280) {
-
-//   for (let i = 0; i < 25; i++) {
-//     for (let j = 0; j < 8; j++) {
-//       //setting the fill colour based on the current column
-//       if (i === currentColumn) {
-//         stroke(100); // white in HSB
-//       } else if (i === leftColumn1 || i === rightColumn1) {
-//         stroke(50);
-//       } else if (i === leftColumn2 || i === rightColumn2) {
-//         stroke(25);
-//       }else if (i === leftColumn3 || i === rightColumn3) {
-//         stroke(12);
-//       } else if (i === leftColumn4 || i === rightColumn4) {
-//         stroke(6);
-//        } else {
-//         stroke (0); //black colour HSB
-//        }
+  for (let i = 0; i < 25; i++) {
+    for (let j = 0; j < 8; j++) {
+      //setting the fill colour based on the current column
+      if (i === currentColumn) {
+        stroke(100); // white in HSB
+      } else if (i === leftColumn1 || i === rightColumn1) {
+        stroke(50);
+      } else if (i === leftColumn2 || i === rightColumn2) {
+        stroke(25);
+      }else if (i === leftColumn3 || i === rightColumn3) {
+        stroke(12);
+      } else if (i === leftColumn4 || i === rightColumn4) {
+        stroke(6);
+       } else {
+        stroke (0); //black colour HSB
+       }
        
-//       drawWind(startX + i * totalWidth, startY + j * totalHeight);
-//     }
-//   }
-//   let opacity = map(counter, 0, 800, 100, 0);
+      drawWind(startX + i * totalWidth, startY + j * totalHeight);
+    }
+  }
+  let opacity = map(counter, 0, 800, 100, 0);
 
-//   fill(0, opacity);
-//   noStroke();
-//   rect(0, 0, 800, 800);
-//   }
+  fill(0, opacity);
+  noStroke();
+  rect(0, 0, 800, 800);
+ }
 
+function drawCrossBig(x, y, size) {
+  strokeWeight(4);
+  line(x, y - size / 2, x, y + size / 2);
+  line(x - size / 2, y, x + size / 2, y);
 
-// if (counter > 1360) {
-//   drawPreVerse(vocal, other, counter);
-
-// if (counter > 2730) {
-  drawVerse(vocal, other, counter);
 }
-// }
-
-// }
-
-
-
-
-
+  function drawCrossSmall(x, y, size) {
+    strokeWeight(3);
+    line(x, y - size / 4, x, y + size / 4);
+    line(x - size / 4, y, x + size / 4, y);
+  }
 
 function drawWind(x, y) {
   strokeWeight(2);
@@ -100,169 +348,132 @@ function drawWind(x, y) {
   line(x, y + 10, x + 20, y + 10); // Horizontal line
   line(x, y, x + 20, y + 20); // Diagonal line from top-left to bottom-right
   line(x + 20, y, x, y + 20); // Diagonal line from top-right to bottom-left
-  
 }
 
-function drawPreVerse(vocal, other, counter) {
- push();
 
 
-  drawVocalRectangles(vocal);
-  drawOrganCircle(other, counter);
-  
-  pop();
-}
-  function drawVocalRectangles(vocal) {
+  function drawOrganRectangles(other) {
+    
+    let lerpFactor = map(other, 0, 100, 0, 1);
+    let startColor1 = color(255, 255, 255, 0);
+    let endColor1 = color(41, 59, 163, 255);
+    let lerpedColor1 = lerpColor(startColor1, endColor1, lerpFactor);
 
-    let opacity1 = map(vocal - 35, 0, 100, 0, 255);
-    let opacity2 = map(vocal - 35, 0, 100, 0, 255);
-    let opacity3 = map(vocal - 40, 0, 100, 0, 255);
-    let opacity4 = map(vocal - 35, 0, 100, 0, 255);
-    let opacity5 = map(vocal - 45, 0, 100, 0, 255);
-    let opacity6 = map(vocal - 35, 0, 100, 0, 255);
-    let opacity7 = map(vocal - 35, 0, 100, 0, 255);
-    let opacity8 = map(vocal - 45, 0, 100, 0, 255);
-    let opacity9 = map(vocal - 35, 0, 100, 0, 255);
-    let opacity10 = map(vocal - 25, 0, 100, 0, 255);
-    let opacity11 = map(vocal- 15, 0, 100, 0, 255);
-    let opacity12 = map(vocal - 30, 0, 100, 0, 255);
-    let opacity13 = map(vocal - 35, 0, 100, 0, 255);
-    let opacity14 = map(vocal - 30, 0, 100, 0, 255);
-    let opacity15 = map(vocal - 35, 0, 100, 0, 255);
-    let opacity16 = map(vocal - 40, 0, 100, 0, 255);
+    let startColor2 = color(255, 255, 255, 0);
+    let endColor2 = color(155, 163, 41, 255);
+    let lerpedColor2 = lerpColor(startColor2, endColor2, lerpFactor);
+
+    let startColor3 = color(255, 255, 255, 0);
+    let endColor3 = color(163, 55, 41, 255);
+    let lerpedColor3 = lerpColor(startColor3, endColor3, lerpFactor);
+
+    let startColor4 = color(255, 255, 255, 0);
+    let endColor4 = color(157, 41, 163, 255);
+    let lerpedColor4 = lerpColor(startColor4, endColor4, lerpFactor);
+
+    
+
+    
+
+    let opacity1 = map(other - 50, 0, 100, 0, 255);
+    let opacity2 = map(other - 40, 0, 100, 0, 255);
+    let opacity3 = map(other - 43, 0, 100, 0, 255);
+    let opacity4 = map(other - 40, 0, 100, 0, 255);
+    let opacity5 = map(other - 45, 0, 100, 0, 255);
+    let opacity6 = map(other - 40, 0, 100, 0, 255);
+    let opacity7 = map(other - 38, 0, 100, 0, 255);
+    let opacity8 = map(other - 50, 0, 100, 0, 255);
+    let opacity9 = map(other - 39, 0, 100, 0, 255);
+    let opacity10 = map(other - 30, 0, 100, 0, 255);
+    let opacity11 = map(other- 25, 0, 100, 0, 255);
+    let opacity12 = map(other - 38, 0, 100, 0, 255);
+    let opacity13 = map(other - 31, 0, 100, 0, 255);
+    let opacity14 = map(other - 45, 0, 100, 0, 255);
+    let opacity15 = map(other - 46, 0, 100, 0, 255);
+    let opacity16 = map(other - 50, 0, 100, 0, 255);
 
   
 
  fill(255, opacity1);
- rect(345,345,20,20)
+ rect(350,350,10,10)
  fill(255, opacity2);
- rect(375,345,20,20)
+ rect(380,350,10, 10)
  fill(255, opacity3);
- rect(405,345,20,20)
+ rect(410,350,10,10)
  fill(255, opacity4);
- rect(435,345,20,20)
+ rect(440,350,10,10)
  
  fill(255, opacity5);
- rect(345,375,20,20)
+ rect(350,380,10,10)
  fill(255, opacity6);
- rect(375,375,20,20)
+ rect(380,380,10,10)
  fill(255, opacity7);
- rect(405,375,20,20)
+ rect(410,380,10,10)
  fill(255, opacity8);
- rect(435,375,20,20)
+ rect(440,380,10,10)
 
  fill(255, opacity9);
- rect(345,405,20,20)
+ rect(350,410,10,10)
  fill(255, opacity10);
- rect(375,405,20,20)
+ rect(380,410,10,10)
  fill(255, opacity11);
- rect(405,405,20,20)
+ rect(410,410,10,10)
  fill(255, opacity12);
- rect(435,405,20,20)
+ rect(440,410,10,10)
 
  fill(255, opacity13);
- rect(345,435,20,20)
+ rect(350,440,10,10)
  fill(255, opacity14);
- rect(375,435,20,20)
+ rect(380,440,10,10)
  fill(255, opacity15);
- rect(405,435,20,20)
+ rect(410,440,10,10)
  fill(255, opacity16);
- rect(435,435,20,20)
-
- 
-
-
+ rect(440,440,10,10)
   
   }
 
-
-function drawOrganCircle(other, counter) {
- 
- 
-
-  push();
-  colorMode(RGB);
-  fill('#fc7303');
-  noStroke();
-
-  let shakeX = map(other, 0, 100, -10, 10);
-  
-  let size = map(counter, 1360, 2700, 10, 30);
-  size = constrain(size, 10, 50);
-  
-  ellipse(400 + shakeX, 400, size, size);
-
-  pop();
-  
-  
-} 
-
-function drawVerse(vocal, other, counter, x, y) {
-  drawCrossBig(400, 300);
-  drawCrossBig(400, 400);
-  drawCrossBig(500, 360);
-  drawCrossBig(370, 350);
-  drawCrossBig(310, 390);
-  drawCrossBig(330, 290);
-  drawCrossBig(370, 460);
-  drawCrossBig(420, 360);
-  drawCrossBig(450, 440);
-  drawCrossBig(360, 420);
-
-  drawCrossSmall(450, 400);
-  drawCrossSmall(440, 330);
-  drawCrossSmall(320, 330);
-  drawCrossSmall(290, 370);
-
-  ellipse(390, 400, 5, 5);
-  ellipse(330, 370, 5, 5);
-  ellipse(450, 330, 5, 5);
-  ellipse(460, 445, 5, 5);
-  
-
-
-function drawCrossBig(x,y) {
-  strokeWeight(4);
-  stroke(255);
-  line(x, y, x, y + 40);
-  line(x - 20, y + 20, x + 20, y + 20);
-
-}
-  function drawCrossSmall(x,y) {
-    strokeWeight(3);
-    stroke(255);
-    line(x, y, x, y + 20);
-    line(x - 10, y + 10, x + 10, y + 10);
+  function drawCrossBig(x, y, size) {
+    strokeWeight(4);
+    line(x, y - size / 2, x, y + size / 2); // Vertical line
+    line(x - size / 2, y, x + size / 2, y); // Horizontal line
   }
+
+
+// function drawOrganCircle(other, counter) {
+ 
+ 
+
+//   push();
+//   colorMode(RGB);
+//   fill('#fc7303');
+//   noStroke();
+
+//   let shakeX = map(other, 0, 100, -10, 10);
+  
+//   let size = map(counter, 1360, 2700, 10, 30);
+//   size = constrain(size, 10, 50);
+  
+//   ellipse(400 + shakeX, 400, size, size);
+
+//   pop();
+  
+  
+// } 
+
+
  
   
-
-  }
-  
-
-
-
-
-
   
   
 
-  
-  // let centerX = 400;
-  // let centerY = 300;
-  // let baseSize = 25;
 
-  // for (let i = 1; i <= numSquares; i++) {
-  // let expandSize = map(other, 0, 100, baseSize, baseSize + i * 1);
 
-  // fill(100);
-  // rect(centerX - i * 50, centerY, expandSize, expandSize);
-  // rect(centerX + i * 50, centerY, expandSize, expandSize);
 
-  // rect(centerX, centerY, 25, 25)
+
   
   
-  // }
+
+  
 
   
   
