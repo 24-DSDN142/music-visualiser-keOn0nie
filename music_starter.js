@@ -1,6 +1,5 @@
 
 // vocal, drum, bass, and other are volumes ranging from 0 to 100
-
 function draw() {
   draw_one_frame();
   frameCounter++;
@@ -17,24 +16,65 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   fill(255);
   text(`Frames: ${counter}`, 10, 30);
 
-  // if (counter > 4070) {
+  if (counter > 5420) {
+    drawBridge(vocal, other, drum);
+  
+ } else if (counter > 4070) {
     drawPreChorus(vocal, bass, other, drum, counter);
-// }
-//   else if (counter > 2700) {
-//   drawVerse(vocal, other, counter);
-// } 
-//   else if (counter > 1360 && counter <= 2700) {
-//   drawPreVerse(vocal, other, counter);
-// }
-//   else if (counter < 1280) {
-//   drawWindGrid(counter, other);
-// }
-// }
 
+ } else if (counter > 2700) {
+  drawVerse(vocal, other, drum);
+ 
+}  else if (counter > 1360 && counter <= 2700) {
+  drawPreVerse(vocal, other, counter);
+
+}  else if (counter < 1280) {
+  drawWindGrid(counter, other);
 }
+}
+
  
  
-function drawBridge(vocal, other) {
+function drawBridge(vocal, other, drum) {
+
+  
+push();
+colorMode(RGB);
+drawSynthRectangles(drum); 
+
+const numCircles = 20;
+const radius = 60;
+const centerX = 400;
+const centerY = 400;
+const angleStep = 360 / numCircles;
+
+let fromColor = color(80, 200, 200);
+let toColor = color(200, 80, 200);
+let lerpFactor = map(drum, 0, 100, 0, 1);
+
+
+for (let i = 0; i < numCircles; i++) {
+  let angle = i * angleStep;
+  let x = centerX + radius * cos(angle);
+  let y = centerY + radius * sin(angle);
+
+  let circleSize = map(other, 0, 100, 5, 20);
+  let lerpedColor = lerpColor(fromColor, toColor, lerpFactor);
+
+  fill(lerpedColor);
+  noStroke();
+  ellipse(x, y, circleSize, circleSize);
+}
+
+let crossSize = map(vocal, 0, 100, 5, 50);
+stroke('#949fff')
+drawCrossBig(400, 400, crossSize); //from PreVerse
+
+
+  
+pop();
+
+  
 
 
 }
@@ -58,6 +98,8 @@ function drawPreChorus(vocal, bass, other, drum, counter, x, y) {
     let angle = counter * 0.05 + i * angleStep;
     let x = centerX + radius * cos(angle);
     let y = centerY + radius * sin(angle);
+
+    
 
     let circleSize = map(other, 0, 100, 10, 40);
     let lerpedColor2 = lerpColor(fromColor2, toColor2, lerpFactor2);
@@ -181,32 +223,32 @@ function drawCrossBig(x, y, size) {
   line(x - size / 2, y, x + size / 2, y);
 }
 
-function drawVerse(vocal, other, counter, x, y) {
+function drawVerse(vocal, other, drum) {
+ 
+ 
   push();
   colorMode(RGB);
 
- const numCircles = 16;
- const radius = 100;
- const centerX = 400;
- const centerY = 400;
- const angleStep = 360 / numCircles;
 
- let lerpFactor = map(counter, 2700, 4070, 0, 1);
-//  let lerpFactor = map(counter, 0, 1700, 0, 1); //testing lerp
+  const numCircles = 20;
+  const radius = 60;
+  const centerX = 400;
+  const centerY = 400;
+  const angleStep = 360 / numCircles;
 
- let fromColor = color(200, 80, 80); //orange
- let toColor = color(200, 200, 80); //yellow
+  let fromColor = color(200, 80, 80); //orange
+  let toColor = color(200, 200, 80); //yellow
+  let lerpFactor = map(drum, 0, 100, 0, 1);
 
-
-  
+ 
 
  for (let i = 0; i < numCircles; i++) {
-  let angle = counter * 0.05 + i * angleStep;
+  let angle = other * 0.05 + i * angleStep;
   let x = centerX + radius * cos(angle);
   let y = centerY + radius * sin(angle);
-  
-  let circleSize = map(other, 0, 100, 10, 40);
 
+  
+  let circleSize = map(other, 0, 100, 5, 20);
   let lerpedColor = lerpColor(fromColor, toColor, lerpFactor);
   
   
@@ -237,7 +279,7 @@ function drawVerse(vocal, other, counter, x, y) {
   drawCrossSmall(370, 430, crossSize); //from PreVerse
   
   stroke('#ff91fb');
-  drawCrossSmall(450, 400, crossSize);
+  drawCrossSmall(435, 400, crossSize);
 
   stroke('#c3ff91')
   fill('#c3ff91');
@@ -431,6 +473,157 @@ function drawWind(x, y) {
  rect(440,440,10,10)
   
   }
+
+  function drawSynthRectangles(drum) {
+    push();
+    rectMode(CENTER);
+    fill(255, 255);
+    
+    let opacity1 = map(drum - 5, 0, 100, 0, 255);
+    let opacity2 = map(drum - 15, 0, 100, 0, 255);
+    let opacity3 = map(drum - 25, 0, 100, 0, 255);
+    let opacity4 = map(drum - 35, 0, 100, 0, 255);
+    let opacity5 = map(drum - 45, 0, 100, 0, 255);
+    
+    
+
+    fill(255, opacity1);
+    rect(400, 400, 10, 10);
+
+    fill(255, opacity2);
+    rect(400, 370, 10, 10);
+    rect(400, 430, 10, 10);
+    rect(430, 400, 10, 10);
+    rect(370, 400, 10, 10);
+
+    fill(255, opacity3);
+    rect(400, 340, 10, 10);
+    rect(430, 370, 10, 10);
+    rect(460, 400, 10, 10);
+    rect(430, 430, 10, 10);
+    rect(400, 460, 10, 10);
+    rect(370, 430, 10, 10);
+    rect(370, 370, 10, 10);
+    rect(340, 400, 10, 10);
+
+    
+    fill(255, opacity4);
+    rect(400, 310, 10, 10);
+    rect(430, 340, 10, 10);
+    rect(460, 370, 10, 10);
+    rect(490, 400, 10, 10);
+    rect(460, 430, 10, 10);
+    rect(430, 460, 10, 10);
+    rect(400, 490, 10, 10);
+    rect(370, 460, 10, 10);
+    rect(340, 430, 10, 10);
+    rect(310, 400, 10, 10);
+    rect(340, 370, 10, 10);
+    rect(370, 340, 10, 10);
+
+    fill(255, opacity5);
+    rect(400, 280, 10, 10);
+    rect(430, 310, 10, 10);
+    rect(460, 340, 10, 10);
+    rect(490, 370, 10, 10);
+    rect(520, 400, 10, 10);
+    rect(490, 430, 10, 10);
+    rect(460, 460, 10, 10);
+    rect(430, 490, 10, 10);
+    rect(400, 520, 10, 10);
+    rect(370, 490, 10, 10);
+    rect(340, 460, 10, 10);
+    rect(310, 430, 10, 10);
+    rect(280, 400, 10, 10);
+    rect(310, 370, 10, 10);
+    rect(340, 340, 10, 10);
+    rect(370, 310, 10, 10);
+
+
+
+    
+    
+    
+    
+    
+   
+    
+    
+    
+    // fill(255, opacity3);
+    // rect(460, 370, 10, 10);
+    // fill(255, opacity3);
+    // rect(340, 370, 10, 10);
+    
+    // fill(255, opacity3);
+    // rect(340, 400, 10, 10);
+    // fill(255, opacity3);
+    // rect(460, 430, 10, 10);
+    // fill(255, opacity3);
+    // rect(340, 430, 10, 10);
+    
+    
+    // fill(255, opacity3);
+    // rect(430, 340, 10, 10);
+    // fill(255, opacity3);
+    // rect(460, 340, 10, 10);
+    // fill(255, opacity3);
+    // rect(370, 340, 10, 10);
+    // fill(255, opacity3);
+    // rect(340, 340, 10, 10);
+    // fill(255, opacity3);
+    // rect(370, 460, 10, 10);
+    // fill(255, opacity3);
+    // rect(340, 460, 10, 10);
+    // fill(255, opacity3);
+    // rect(430, 460, 10, 10);
+    // fill(255, opacity3);
+    // rect(460, 460, 10, 10);
+    // fill(255, opacity3);
+    // fill(255, 255);
+    
+    // rect(370, 310, 10, 10);
+    
+    // rect(430, 310, 10, 10);
+
+    // rect(400, 280, 10, 10);
+    
+    // rect(490, 400, 10, 10);
+    // rect(490, 370, 10, 10);
+    // rect(490, 430, 10, 10);
+    
+    // rect(520, 400, 10, 10);
+
+    // rect(400, 490, 10, 10);
+    // rect(430, 490, 10, 10);
+    // rect(370, 490, 10, 10);
+
+    // rect(400, 530, 10, 10);
+
+    // rect(310, 400, 10, 10);
+    // rect(310, 370, 10, 10);
+    // rect(310, 430, 10, 10);
+
+    // rect(280, 400, 10, 10);
+
+
+
+
+
+
+    
+    
+    // fill(255, 255);
+    // rect(380,350,10, 10)
+    // fill(255, 255);
+    // rect(410,350,10,10)
+    // fill(255, 255);
+    // rect(440,350,10,10)
+
+
+  }
+
+
 
   function drawCrossBig(x, y, size) {
     strokeWeight(4);
