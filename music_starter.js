@@ -1,4 +1,4 @@
-
+let smoothedNumGlowLayers = 0;
 // vocal, drum, bass, and other are volumes ranging from 0 to 100
 function draw() {
   draw_one_frame();
@@ -81,30 +81,29 @@ pop();
 
 
 function drawPreChorus(vocal, bass, other, drum, counter, x, y) {
+  console.log("Drawing PreChorus");
+  
   push();
   colorMode(RGB);
 
-  const numCircles = 16;
-  const radius = 150;
+  const numCircles = 20;
+  const radius = 120;
   const centerX = 400;
   const centerY = 400;
   const angleStep = 360 / numCircles;
 
-  let lerpFactor2 = map(counter, 4070, 5420, 0, 1); 
-  let fromColor2 = color(200, 200, 80); //yellow
-  let toColor2 = color(80, 172, 200); //blue
+  let lerpFactor2 = map(drum, 0, 100, 0, 1); //testing lerp
+  let fromColor2 = color(153, 0, 64); //pink
+  let toColor2 = color(255, 179, 211); //light-pink
 
-  for(let i = 0; i < numCircles; i++) {
+  for (let i = 0; i < numCircles; i++) {
     let angle = counter * 0.05 + i * angleStep;
     let x = centerX + radius * cos(angle);
     let y = centerY + radius * sin(angle);
 
-    
-
-    let circleSize = map(other, 0, 100, 10, 40);
+  
+    let circleSize = map(other, 0, 100, 10, 30);
     let lerpedColor2 = lerpColor(fromColor2, toColor2, lerpFactor2);
-
-   
 
     fill(lerpedColor2);
     noStroke();
@@ -113,30 +112,36 @@ function drawPreChorus(vocal, bass, other, drum, counter, x, y) {
   }
   
   const diamondRadius = 200;
-  let lerpFactor3 = map(counter, 4070, 5420, 0, 1);
+  let rectSize = 5;
+
+  let targetNumGlowLayers = map(bass, 0, 100, 0, 5);
+
+  smoothedNumGlowLayers = lerp(smoothedNumGlowLayers, targetNumGlowLayers, 0.1);
+
+  let glowFactor = 200;
   let fromColor3 = color(255, 79, 79);
   let toColor3 = color(250, 52, 52);
-
+  let lerpFactor3 = map(counter, 4070, 5420, 0, 1);
+  let lerpedColor3 = lerpColor(fromColor3, toColor3, lerpFactor3);
+  
   for (let i = 0; i < numCircles; i++) {
     let angle = counter * 0.1 + i * angleStep;
     let x = centerX + diamondRadius * cos(angle);
     let y = centerY + diamondRadius * sin(angle);
 
-    let rectSize = map(bass, 0, 100, 5, 40);
-    let lerpedColor3 = lerpColor(fromColor3, toColor3, lerpFactor3);
-
-   if (counter > 4420) {
+   
+    
     noStroke();
-    for (let glowLayer = 5; glowLayer > 0; glowLayer--) {
-      fill(red(lerpedColor3), green(lerpedColor3), blue(lerpedColor3), 50 / glowLayer);
+    for (let glowLayer = floor(smoothedNumGlowLayers); glowLayer > 0; glowLayer--) {
+      fill(red(lerpedColor3), green(lerpedColor3), blue(lerpedColor3), glowFactor / glowLayer);
       push();
       translate(x, y);
       rotate(PI / 4);
       rectMode(CENTER);
-      rect(0, 0, rectSize + glowLayer * 8, rectSize + glowLayer * 8);
+      rect(0, 0, rectSize + glowLayer * 8, rectSize + glowLayer * 8); // 
       pop();
     }
-  }
+
     fill(lerpedColor3);
     noStroke();
 
@@ -150,31 +155,13 @@ function drawPreChorus(vocal, bass, other, drum, counter, x, y) {
   
   let crossSize = map(vocal, 0, 100, 5, 50);
   let VocalCircleSize = map(vocal, 0, 100, 1, 10);
-  let glowIntensity = map(drum, 0, 100, 0, 150);
+  // let glowIntensity = map(drum, 0, 100, 0, 150);
 
 
   stroke('#949fff')
   drawCrossBig(400, 400, crossSize); //from PreVerse
  
-  drawCrossBig(400, 300, crossSize); 
-  stroke('#91ffff')
-  drawCrossBig(480, 360, crossSize);
-  drawCrossBig(370, 350, crossSize);
-  drawCrossBig(340, 390, crossSize);
-  stroke('#ff91fb');
-  drawCrossBig(330, 440, crossSize);
-  drawCrossBig(370, 460, crossSize);
-  drawCrossBig(420, 360, crossSize);
-  stroke('#c3ff91')
-  drawCrossBig(450, 440, crossSize);
-  drawCrossBig(360, 420, crossSize);
-  stroke(255);
-  drawCrossBig(360, 370, crossSize);
-  drawCrossBig(450, 350, crossSize);
-  stroke('#ff9191')
-  drawCrossBig(480, 400, crossSize);
-  stroke('#949fff')
-  drawCrossBig(480, 450, crossSize);
+
 
   stroke('#ff91fb');
   drawCrossSmall(370, 370, crossSize); //from PreVerse
@@ -186,30 +173,33 @@ function drawPreChorus(vocal, bass, other, drum, counter, x, y) {
   drawCrossSmall(370, 430, crossSize); //from PreVerse
   
   
-  stroke('#ff91fb');
-  drawCrossSmall(450, 400, crossSize);
-  drawCrossSmall(440, 330, crossSize);
-  drawCrossSmall(400, 370, crossSize);
-  stroke('#ff9191')
-  drawCrossSmall(320, 330, crossSize);
-  drawCrossSmall(290, 370, crossSize);
-  stroke('#949fff')
-  drawCrossSmall(440, 470, crossSize);
-
  
+  stroke('#949fff')
+  drawCrossBig(400, 400, crossSize); //from PreVerse
+ 
+
+
+  stroke('#ff91fb');
+  drawCrossSmall(370, 370, crossSize); //from PreVerse
+  stroke('#91ffff')
+  drawCrossSmall(430, 370, crossSize); //from PreVerse
+  stroke('#c3ff91')
+  drawCrossSmall(430, 430, crossSize); //from PreVerse
+  stroke('#ff9191')
+  drawCrossSmall(370, 430, crossSize); //from PreVerse
+  
+  stroke('#ff91fb');
+  drawCrossSmall(435, 400, crossSize);
 
   stroke('#c3ff91')
   fill('#c3ff91');
-  ellipse(390, 400, VocalCircleSize, VocalCircleSize);
+  ellipse(365, 400, VocalCircleSize, VocalCircleSize);
   stroke('#ff91fb');
   fill('#ff91fb');
-  ellipse(330, 370, VocalCircleSize, VocalCircleSize);
-  stroke(255);
-  fill(255);
-  ellipse(415, 305, VocalCircleSize, VocalCircleSize);
-  ellipse(460, 445, VocalCircleSize, VocalCircleSize);
-  ellipse(460, 390, VocalCircleSize, VocalCircleSize);
-  ellipse(420, 450, VocalCircleSize, VocalCircleSize);
+  ellipse(400, 360, VocalCircleSize, VocalCircleSize);
+  stroke('#509cc8');
+  fill('#509cc8');
+  ellipse(400, 440, VocalCircleSize, VocalCircleSize);
 
   pop();
 }
@@ -283,10 +273,13 @@ function drawVerse(vocal, other, drum) {
 
   stroke('#c3ff91')
   fill('#c3ff91');
-  ellipse(370, 400, circleSize, circleSize);
+  ellipse(365, 400, circleSize, circleSize);
   stroke('#ff91fb');
   fill('#ff91fb');
-  ellipse(410, 360, circleSize, circleSize);
+  ellipse(400, 360, circleSize, circleSize);
+  stroke('#509cc8');
+  fill('#509cc8');
+  ellipse(400, 440, circleSize, circleSize);
   
   
 
@@ -544,83 +537,6 @@ function drawWind(x, y) {
     
     
     
-    
-    
-   
-    
-    
-    
-    // fill(255, opacity3);
-    // rect(460, 370, 10, 10);
-    // fill(255, opacity3);
-    // rect(340, 370, 10, 10);
-    
-    // fill(255, opacity3);
-    // rect(340, 400, 10, 10);
-    // fill(255, opacity3);
-    // rect(460, 430, 10, 10);
-    // fill(255, opacity3);
-    // rect(340, 430, 10, 10);
-    
-    
-    // fill(255, opacity3);
-    // rect(430, 340, 10, 10);
-    // fill(255, opacity3);
-    // rect(460, 340, 10, 10);
-    // fill(255, opacity3);
-    // rect(370, 340, 10, 10);
-    // fill(255, opacity3);
-    // rect(340, 340, 10, 10);
-    // fill(255, opacity3);
-    // rect(370, 460, 10, 10);
-    // fill(255, opacity3);
-    // rect(340, 460, 10, 10);
-    // fill(255, opacity3);
-    // rect(430, 460, 10, 10);
-    // fill(255, opacity3);
-    // rect(460, 460, 10, 10);
-    // fill(255, opacity3);
-    // fill(255, 255);
-    
-    // rect(370, 310, 10, 10);
-    
-    // rect(430, 310, 10, 10);
-
-    // rect(400, 280, 10, 10);
-    
-    // rect(490, 400, 10, 10);
-    // rect(490, 370, 10, 10);
-    // rect(490, 430, 10, 10);
-    
-    // rect(520, 400, 10, 10);
-
-    // rect(400, 490, 10, 10);
-    // rect(430, 490, 10, 10);
-    // rect(370, 490, 10, 10);
-
-    // rect(400, 530, 10, 10);
-
-    // rect(310, 400, 10, 10);
-    // rect(310, 370, 10, 10);
-    // rect(310, 430, 10, 10);
-
-    // rect(280, 400, 10, 10);
-
-
-
-
-
-
-    
-    
-    // fill(255, 255);
-    // rect(380,350,10, 10)
-    // fill(255, 255);
-    // rect(410,350,10,10)
-    // fill(255, 255);
-    // rect(440,350,10,10)
-
-
   }
 
 
@@ -632,26 +548,9 @@ function drawWind(x, y) {
   }
 
 
-// function drawOrganCircle(other, counter) {
- 
- 
+  
 
-//   push();
-//   colorMode(RGB);
-//   fill('#fc7303');
-//   noStroke();
 
-//   let shakeX = map(other, 0, 100, -10, 10);
-  
-//   let size = map(counter, 1360, 2700, 10, 30);
-//   size = constrain(size, 10, 50);
-  
-//   ellipse(400 + shakeX, 400, size, size);
-
-//   pop();
-  
-  
-// } 
 
 
  
