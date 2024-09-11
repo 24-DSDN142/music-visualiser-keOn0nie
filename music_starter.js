@@ -11,30 +11,31 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   colorMode(HSB, 100);
   background(0);
   textFont('Verdana'); // please use CSS safe fonts
-  // rectMode(CENTER)
+  rectMode(CENTER)
   textSize(24);
   fill(255);
   text(`Frames: ${counter}`, 10, 30);
 
 
-  //  if (counter > 6790) {
-    // drawChorus(vocal, bass, other, drum, counter);
+   if (counter > 6790) {
+    drawChorus(vocal, bass, other, drum, counter);
 
-//  } else if (counter > 5420) {
-    // drawBridge(vocal, other, drum);
+ } else if (counter > 5420) {
+    drawBridge(vocal, other, drum);
   
-//  } else if (counter > 4070) {
-    // drawPreChorus(vocal, bass, other, drum, counter);
+ } else if (counter > 4070) {
+    drawPreChorus(vocal, bass, other, drum, counter);
 
-//  } else if (counter > 2700) {
+ } else if (counter > 2700) {
   drawVerse(vocal, other, drum);
  
-// }  else if (counter > 1360 && counter <= 2700) {
-//   drawPreVerse(vocal, other, counter);
+}  else if (counter > 1360 && counter <= 2700) {
+  drawPreVerse(vocal, other, counter);
 
-// }  else if (counter < 1280) {
-//   drawWindGrid(counter, other);
-// }
+  
+}  else if (counter < 1280) {
+  drawWindGrid(counter, other);
+}
 }
 
  function drawChorus(vocal, bass, other, drum, counter) {
@@ -162,48 +163,34 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   // let glowIntensity = map(drum, 0, 100, 0, 150);
 
 
-  stroke('#949fff')
-  drawCrossBig(400, 400, crossSize); //from PreVerse
+ 
  
 
+ 
 
-  stroke('#ff91fb');
-  drawCrossSmall(370, 370, crossSize); //from PreVerse
-  stroke('#91ffff')
-  drawCrossSmall(430, 370, crossSize); //from PreVerse
-  stroke('#c3ff91')
-  drawCrossSmall(430, 430, crossSize); //from PreVerse
-  stroke('#ff9191')
-  drawCrossSmall(370, 430, crossSize); //from PreVerse
-  
-  
  
   stroke('#949fff')
-  drawCrossBig(400, 400, crossSize); //from PreVerse
+  drawCrossBig(400, 400, crossSize);
  
-
-
   stroke('#ff91fb');
-  drawCrossSmall(370, 370, crossSize); //from PreVerse
+  drawCrossSmall(370, 370, crossSize); 
   stroke('#91ffff')
-  drawCrossSmall(430, 370, crossSize); //from PreVerse
+  drawCrossSmall(430, 370, crossSize); 
   stroke('#c3ff91')
-  drawCrossSmall(430, 430, crossSize); //from PreVerse
+  drawCrossSmall(430, 430, crossSize); 
   stroke('#ff9191')
-  drawCrossSmall(370, 430, crossSize); //from PreVerse
-  
+  drawCrossSmall(370, 430, crossSize); 
+  stroke('#c3ff91');
+  drawCrossSmall(355, 400, crossSize, crossSize);
   stroke('#ff91fb');
-  drawCrossSmall(435, 400, crossSize);
+  drawCrossSmall(445, 400, crossSize);
 
-  stroke('#c3ff91')
-  fill('#c3ff91');
-  ellipse(365, 400, VocalCircleSize, VocalCircleSize);
   stroke('#ff91fb');
   fill('#ff91fb');
-  ellipse(400, 360, VocalCircleSize, VocalCircleSize);
+  ellipse(400, 355, VocalCircleSize, VocalCircleSize);
   stroke('#509cc8');
   fill('#509cc8');
-  ellipse(400, 440, VocalCircleSize, VocalCircleSize);
+  ellipse(400, 445, VocalCircleSize, VocalCircleSize);
 
   pop();
 }
@@ -217,7 +204,7 @@ colorMode(RGB);
 drawSynthRectanglesSmall(drum); 
 
 const numCircles = 20;
-const radius = 60;
+const radius = 80;
 const centerX = 400;
 const centerY = 400;
 const angleStep = 360 / numCircles;
@@ -273,8 +260,8 @@ function drawPreChorus(vocal, bass, other, drum, counter, x, y) {
   const angleStep = 360 / numCircles;
 
   let lerpFactor2 = map(drum, 0, 100, 0, 1); //testing lerp
-  let fromColor2 = color(153, 0, 64); //pink
-  let toColor2 = color(255, 179, 211); //light-pink
+  let fromColor2 = color('#426fb8'); //dark blue
+  let toColor2 = color('#a9d7f6'); //light blue
 
   for (let i = 0; i < numCircles; i++) {
     let angle = counter * 0.05 + i * angleStep;
@@ -296,10 +283,10 @@ function drawPreChorus(vocal, bass, other, drum, counter, x, y) {
 
 
   let glowOpacity = map(bass, 0, 100, 0, 255);
-  let glowFactor = 200;
-  let fromColor3 = color(255, 79, 79);
-  let toColor3 = color(250, 52, 52);
-  let lerpFactor3 = map(counter, 4070, 5420, 0, 1);
+  // let glowFactor = 200;
+  let fromColor3 = color('#b84d69'); // red
+  let toColor3 = color('#f96d6d'); //orange
+  let lerpFactor3 = map(bass, 0, 100, 0, 1);
   let lerpedColor3 = lerpColor(fromColor3, toColor3, lerpFactor3);
   
   for (let i = 0; i < numCircles; i++) {
@@ -311,7 +298,7 @@ function drawPreChorus(vocal, bass, other, drum, counter, x, y) {
     
     noStroke();
 
-    for (let glowLayer = 3; glowLayer > 0; glowLayer--) {
+    for (let glowLayer = 2; glowLayer > 0; glowLayer--) {
       let layerOpacity = (glowOpacity / 5) * glowLayer;
       fill(red(lerpedColor3), green(lerpedColor3), blue(lerpedColor3), layerOpacity);
       push();
@@ -339,47 +326,28 @@ function drawPreChorus(vocal, bass, other, drum, counter, x, y) {
 
 
   stroke('#949fff')
-  drawCrossBig(400, 400, crossSize); //from PreVerse
+  drawCrossBig(400, 400, crossSize);
  
-
-
   stroke('#ff91fb');
-  drawCrossSmall(370, 370, crossSize); //from PreVerse
+  drawCrossSmall(370, 370, crossSize); 
   stroke('#91ffff')
-  drawCrossSmall(430, 370, crossSize); //from PreVerse
+  drawCrossSmall(430, 370, crossSize); 
   stroke('#c3ff91')
-  drawCrossSmall(430, 430, crossSize); //from PreVerse
+  drawCrossSmall(430, 430, crossSize); 
   stroke('#ff9191')
-  drawCrossSmall(370, 430, crossSize); //from PreVerse
-  
-  
- 
-  stroke('#949fff')
-  drawCrossBig(400, 400, crossSize); //from PreVerse
- 
-
-
+  drawCrossSmall(370, 430, crossSize); 
+  stroke('#c3ff91');
+  drawCrossSmall(355, 400, crossSize, crossSize);
   stroke('#ff91fb');
-  drawCrossSmall(370, 370, crossSize); //from PreVerse
-  stroke('#91ffff')
-  drawCrossSmall(430, 370, crossSize); //from PreVerse
-  stroke('#c3ff91')
-  drawCrossSmall(430, 430, crossSize); //from PreVerse
-  stroke('#ff9191')
-  drawCrossSmall(370, 430, crossSize); //from PreVerse
-  
-  stroke('#ff91fb');
-  drawCrossSmall(435, 400, crossSize);
+  drawCrossSmall(445, 400, crossSize);
 
-  stroke('#c3ff91')
-  fill('#c3ff91');
-  ellipse(365, 400, VocalCircleSize, VocalCircleSize);
   stroke('#ff91fb');
   fill('#ff91fb');
-  ellipse(400, 360, VocalCircleSize, VocalCircleSize);
+  ellipse(400, 355, VocalCircleSize, VocalCircleSize);
   stroke('#509cc8');
   fill('#509cc8');
-  ellipse(400, 440, VocalCircleSize, VocalCircleSize);
+  ellipse(400, 445, VocalCircleSize, VocalCircleSize);
+  
 
   pop();
 }
@@ -401,7 +369,7 @@ function drawVerse(vocal, other, drum) {
   drawSynthRectanglesMedium (drum)
 
   const numCircles = 20;
-  const radius = 80;
+  const radius = 90;
   const centerX = 400;
   const centerY = 400;
   const angleStep = 360 / numCircles;
@@ -439,27 +407,27 @@ function drawVerse(vocal, other, drum) {
   
 
 
-  stroke('#ff91fb');
-  drawCrossSmall(370, 370, crossSize); //from PreVerse
-  stroke('#91ffff')
-  drawCrossSmall(430, 370, crossSize); //from PreVerse
-  stroke('#c3ff91')
-  drawCrossSmall(430, 430, crossSize); //from PreVerse
-  stroke('#ff9191')
-  drawCrossSmall(370, 430, crossSize); //from PreVerse
+  // stroke('#ff91fb');
+  // drawCrossSmall(370, 370, crossSize); //from PreVerse
+  // stroke('#91ffff')
+  // drawCrossSmall(430, 370, crossSize); //from PreVerse
+  // stroke('#c3ff91')
+  // drawCrossSmall(430, 430, crossSize); //from PreVerse
+  // stroke('#ff9191')
+  // drawCrossSmall(370, 430, crossSize); //from PreVerse
   
-  stroke('#ff91fb');
-  drawCrossSmall(435, 400, crossSize);
+  // stroke('#ff91fb');
+  // drawCrossSmall(435, 400, crossSize);
 
-  stroke('#c3ff91')
-  fill('#c3ff91');
-  ellipse(365, 400, circleSize, circleSize);
-  stroke('#ff91fb');
-  fill('#ff91fb');
-  ellipse(400, 360, circleSize, circleSize);
-  stroke('#509cc8');
-  fill('#509cc8');
-  ellipse(400, 440, circleSize, circleSize);
+  // stroke('#c3ff91')
+  // fill('#c3ff91');
+  // ellipse(365, 400, circleSize, circleSize);
+  // stroke('#ff91fb');
+  // fill('#ff91fb');
+  // ellipse(400, 360, circleSize, circleSize);
+  // stroke('#509cc8');
+  // fill('#509cc8');
+  // ellipse(400, 440, circleSize, circleSize);
   
   
 
@@ -476,14 +444,14 @@ function drawPreVerse(vocal, other, counter) {
    stroke('#949fff')
    drawCrossBig(400, 400, crossSize); //consistent
  
-   stroke('#ff91fb');
-   drawCrossSmall(370, 370, crossSize); //consistent
-   stroke('#91ffff')
-   drawCrossSmall(430, 370, crossSize); //consistent
-   stroke('#c3ff91')
-   drawCrossSmall(430, 430, crossSize); //consistent
-   stroke('#ff9191')
-   drawCrossSmall(370, 430, crossSize); //consistent
+  //  stroke('#ff91fb');
+  //  drawCrossSmall(370, 370, crossSize); //consistent
+  //  stroke('#91ffff')
+  //  drawCrossSmall(430, 370, crossSize); //consistent
+  //  stroke('#c3ff91')
+  //  drawCrossSmall(430, 430, crossSize); //consistent
+  //  stroke('#ff9191')
+  //  drawCrossSmall(370, 430, crossSize); //consistent
    
  pop();
  }
