@@ -1,4 +1,4 @@
-let smoothedNumGlowLayers = 0;
+let expansionCounter = 0;
 // vocal, drum, bass, and other are volumes ranging from 0 to 100
 function draw() {
   draw_one_frame();
@@ -16,31 +16,205 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   fill(255);
   text(`Frames: ${counter}`, 10, 30);
 
-  if (counter > 5420) {
-    drawBridge(vocal, other, drum);
-  
- } else if (counter > 4070) {
-    drawPreChorus(vocal, bass, other, drum, counter);
 
- } else if (counter > 2700) {
+  //  if (counter > 6790) {
+    // drawChorus(vocal, bass, other, drum, counter);
+
+//  } else if (counter > 5420) {
+    // drawBridge(vocal, other, drum);
+  
+//  } else if (counter > 4070) {
+    // drawPreChorus(vocal, bass, other, drum, counter);
+
+//  } else if (counter > 2700) {
   drawVerse(vocal, other, drum);
  
-}  else if (counter > 1360 && counter <= 2700) {
-  drawPreVerse(vocal, other, counter);
+// }  else if (counter > 1360 && counter <= 2700) {
+//   drawPreVerse(vocal, other, counter);
 
-}  else if (counter < 1280) {
-  drawWindGrid(counter, other);
-}
+// }  else if (counter < 1280) {
+//   drawWindGrid(counter, other);
+// }
 }
 
+ function drawChorus(vocal, bass, other, drum, counter) {
+
+  push();
+  colorMode(RGB);
+  drawSynthRectanglesChorus(drum); 
+
+
+
+  const numCircles = 20; //circle of circles for main instruments
+  const radius = 120; //circle of circles for main instruments
+  const centerX = 400; //circle of circles for main instruments
+  const centerY = 400; //circle of circles for main instruments
+  const angleStep = 360 / numCircles; //circle of circles for main instruments
+
+  let lerpFactor2 = map(drum, 0, 100, 0, 1); 
+  let fromColor2 = color('#9d65c9'); //purpleish
+  let toColor2 = color('#d789d7'); //light purpleish
+
+  for (let i = 0; i < numCircles; i++) {
+    let angle = counter * 0.05 + i * angleStep; //spining slowly clockwise
+    let x = centerX + radius * cos(angle);
+    let y = centerY + radius * sin(angle);
+
+  
+    let circleSize = map(other, 0, 100, 10, 30);
+    let lerpedColor2 = lerpColor(fromColor2, toColor2, lerpFactor2);
+
+    fill(lerpedColor2);
+    noStroke();
+    ellipse(x, y, circleSize, circleSize);
+
+  }
+
+  const numCircles2 = 20; //circle of circles for background synths
+  const radius2 = 160; //circle of circles for background synths
+  const angleStep2 = 360 / numCircles2; //circle of circles for background synths
+
+  let lerpFactor3 = map(drum, 0, 100, 0, 1); 
+  let fromColor3 = color('#2a3d66'); //darker purple
+  let toColor3 = color('#5d54a4'); //light-pink
+
+  for (let i = 0; i < numCircles2; i++) {
+    let angle = -counter * 0.05 - i * angleStep2; //spining anti clockwise
+    let x = centerX + radius2 * cos(angle);
+    let y = centerY + radius2 * sin(angle);
+
+  
+    let circleSize = map(drum, 0, 100, 10, 30);
+    let lerpedColor3 = lerpColor(fromColor3, toColor3, lerpFactor3);
+
+    fill(lerpedColor3);
+    noStroke();
+    ellipse(x, y, circleSize, circleSize);
+
+  }
+
+  
+
+    const expandingCircles = 20;
+    const expandingAngleStep = 360 / expandingCircles;
+
+    
+    let expandingProgress = counter % 339;
+    let expandingRadius = map(expandingProgress, 0, 339, 0, 1500); //
+
+    for (let i = 0; i < expandingCircles; i++) {
+      let angle = i * expandingAngleStep;
+      let x = centerX + expandingRadius * cos(angle);
+      let y = centerY + expandingRadius * sin(angle);
+
+      let circleSize = map(expandingProgress, 0, 339, 20, 50);
+      
+      fill('#99baff');
+      noStroke();
+      ellipse(x, y, circleSize, circleSize);
+    
+    }
+
+
+  const diamondRadius = 200; //circle of rectangles for bass
+  let rectSize = 5; //circle of rectangles for bass
+
+  let glowOpacity = map(bass, 0, 100, 0, 255);
+  let glowFactor = 200;
+  let fromColorBass = color(255, 79, 79);
+  let toColorBass = color(250, 52, 52);
+  let lerpFactorBass = map(counter, 4070, 5420, 0, 1);
+  let lerpedColorBass = lerpColor(fromColorBass, toColorBass, lerpFactorBass);
+  
+  for (let i = 0; i < numCircles; i++) {
+    let angle = counter * 0.2 + i * angleStep; //spinning fast clockwise
+    let x = centerX + diamondRadius * cos(angle);
+    let y = centerY + diamondRadius * sin(angle);
+
+   
+    
+    noStroke();
+
+    for (let glowLayer = 3; glowLayer > 0; glowLayer--) { 
+      let layerOpacity = (glowOpacity / 5) * glowLayer;
+      fill(red(lerpedColorBass), green(lerpedColorBass), blue(lerpedColorBass), layerOpacity);
+      push();
+      translate(x, y);
+      rotate(PI / 4);
+      rectMode(CENTER);
+      rect(0, 0, rectSize + glowLayer * 8, rectSize + glowLayer * 8); // 
+      pop();
+    }
+
+    fill(lerpedColorBass);
+    noStroke();
+
+    push();
+    translate(x, y);
+    rotate(PI / 4);
+    rectMode(CENTER);
+    rect(0, 0, rectSize, rectSize);
+    pop();
+  }
+  
+  let crossSize = map(vocal, 0, 100, 5, 50);
+  let VocalCircleSize = map(vocal, 0, 100, 1, 10);
+  // let glowIntensity = map(drum, 0, 100, 0, 150);
+
+
+  stroke('#949fff')
+  drawCrossBig(400, 400, crossSize); //from PreVerse
  
+
+
+  stroke('#ff91fb');
+  drawCrossSmall(370, 370, crossSize); //from PreVerse
+  stroke('#91ffff')
+  drawCrossSmall(430, 370, crossSize); //from PreVerse
+  stroke('#c3ff91')
+  drawCrossSmall(430, 430, crossSize); //from PreVerse
+  stroke('#ff9191')
+  drawCrossSmall(370, 430, crossSize); //from PreVerse
+  
+  
+ 
+  stroke('#949fff')
+  drawCrossBig(400, 400, crossSize); //from PreVerse
+ 
+
+
+  stroke('#ff91fb');
+  drawCrossSmall(370, 370, crossSize); //from PreVerse
+  stroke('#91ffff')
+  drawCrossSmall(430, 370, crossSize); //from PreVerse
+  stroke('#c3ff91')
+  drawCrossSmall(430, 430, crossSize); //from PreVerse
+  stroke('#ff9191')
+  drawCrossSmall(370, 430, crossSize); //from PreVerse
+  
+  stroke('#ff91fb');
+  drawCrossSmall(435, 400, crossSize);
+
+  stroke('#c3ff91')
+  fill('#c3ff91');
+  ellipse(365, 400, VocalCircleSize, VocalCircleSize);
+  stroke('#ff91fb');
+  fill('#ff91fb');
+  ellipse(400, 360, VocalCircleSize, VocalCircleSize);
+  stroke('#509cc8');
+  fill('#509cc8');
+  ellipse(400, 440, VocalCircleSize, VocalCircleSize);
+
+  pop();
+}
+
  
 function drawBridge(vocal, other, drum) {
 
   
 push();
 colorMode(RGB);
-drawSynthRectangles(drum); 
+drawSynthRectanglesSmall(drum); 
 
 const numCircles = 20;
 const radius = 60;
@@ -53,10 +227,15 @@ let toColor = color(200, 80, 200);
 let lerpFactor = map(drum, 0, 100, 0, 1);
 
 
-for (let i = 0; i < numCircles; i++) {
-  let angle = i * angleStep;
-  let x = centerX + radius * cos(angle);
-  let y = centerY + radius * sin(angle);
+// for (let i = 0; i < numCircles; i++) {
+//   let angle = i * angleStep;
+//   let x = centerX + radius * cos(angle);
+//   let y = centerY + radius * sin(angle);
+
+  for (let i = 0; i < numCircles; i++) {
+    let angle = other * 0.05 + i * angleStep;
+    let x = centerX + radius * cos(angle);
+    let y = centerY + radius * sin(angle);
 
   let circleSize = map(other, 0, 100, 5, 20);
   let lerpedColor = lerpColor(fromColor, toColor, lerpFactor);
@@ -85,9 +264,10 @@ function drawPreChorus(vocal, bass, other, drum, counter, x, y) {
   
   push();
   colorMode(RGB);
+  drawSynthRectanglesMedium(drum); 
 
   const numCircles = 20;
-  const radius = 120;
+  const radius = 90;
   const centerX = 400;
   const centerY = 400;
   const angleStep = 360 / numCircles;
@@ -111,13 +291,11 @@ function drawPreChorus(vocal, bass, other, drum, counter, x, y) {
 
   }
   
-  const diamondRadius = 200;
+  const diamondRadius = 130;
   let rectSize = 5;
 
-  let targetNumGlowLayers = map(bass, 0, 100, 0, 5);
 
-  smoothedNumGlowLayers = lerp(smoothedNumGlowLayers, targetNumGlowLayers, 0.1);
-
+  let glowOpacity = map(bass, 0, 100, 0, 255);
   let glowFactor = 200;
   let fromColor3 = color(255, 79, 79);
   let toColor3 = color(250, 52, 52);
@@ -132,8 +310,10 @@ function drawPreChorus(vocal, bass, other, drum, counter, x, y) {
    
     
     noStroke();
-    for (let glowLayer = floor(smoothedNumGlowLayers); glowLayer > 0; glowLayer--) {
-      fill(red(lerpedColor3), green(lerpedColor3), blue(lerpedColor3), glowFactor / glowLayer);
+
+    for (let glowLayer = 3; glowLayer > 0; glowLayer--) {
+      let layerOpacity = (glowOpacity / 5) * glowLayer;
+      fill(red(lerpedColor3), green(lerpedColor3), blue(lerpedColor3), layerOpacity);
       push();
       translate(x, y);
       rotate(PI / 4);
@@ -218,10 +398,10 @@ function drawVerse(vocal, other, drum) {
  
   push();
   colorMode(RGB);
-
+  drawSynthRectanglesMedium (drum)
 
   const numCircles = 20;
-  const radius = 60;
+  const radius = 80;
   const centerX = 400;
   const centerY = 400;
   const angleStep = 360 / numCircles;
@@ -467,16 +647,16 @@ function drawWind(x, y) {
   
   }
 
-  function drawSynthRectangles(drum) {
+  function drawSynthRectanglesChorus(drum) {
     push();
     rectMode(CENTER);
     fill(255, 255);
     
-    let opacity1 = map(drum - 5, 0, 100, 0, 255);
-    let opacity2 = map(drum - 15, 0, 100, 0, 255);
-    let opacity3 = map(drum - 25, 0, 100, 0, 255);
-    let opacity4 = map(drum - 35, 0, 100, 0, 255);
-    let opacity5 = map(drum - 45, 0, 100, 0, 255);
+    let opacity1 = map(drum, 0, 100, 0, 255);
+    let opacity2 = map(drum - 5, 0, 100, 0, 255);
+    let opacity3 = map(drum - 15, 0, 100, 0, 255);
+    let opacity4 = map(drum - 25, 0, 100, 0, 255);
+    let opacity5 = map(drum - 35, 0, 100, 0, 255);
     
     
 
@@ -539,14 +719,91 @@ function drawWind(x, y) {
     
   }
 
+  function drawSynthRectanglesMedium (drum) {
+    push();
+    rectMode(CENTER);
+    fill(255, 255);
+    
+    let opacity1 = map(drum - 5, 0, 100, 0, 255);
+    let opacity2 = map(drum - 15, 0, 100, 0, 255);
+    let opacity3 = map(drum - 25, 0, 100, 0, 255);
+    let opacity4 = map(drum - 35, 0, 100, 0, 255);
+    
+    
+    
+
+    fill(255, opacity1);
+    rect(400, 400, 10, 10);
+
+    fill(255, opacity2);
+    rect(400, 370, 10, 10);
+    rect(400, 430, 10, 10);
+    rect(430, 400, 10, 10);
+    rect(370, 400, 10, 10);
+
+    fill(255, opacity3);
+    rect(400, 340, 10, 10);
+    rect(430, 370, 10, 10);
+    rect(460, 400, 10, 10);
+    rect(430, 430, 10, 10);
+    rect(400, 460, 10, 10);
+    rect(370, 430, 10, 10);
+    rect(370, 370, 10, 10);
+    rect(340, 400, 10, 10);
+
+    
+    fill(255, opacity4);
+    rect(400, 310, 10, 10);
+    rect(430, 340, 10, 10);
+    rect(460, 370, 10, 10);
+    rect(490, 400, 10, 10);
+    rect(460, 430, 10, 10);
+    rect(430, 460, 10, 10);
+    rect(400, 490, 10, 10);
+    rect(370, 460, 10, 10);
+    rect(340, 430, 10, 10);
+    rect(310, 400, 10, 10);
+    rect(340, 370, 10, 10);
+    rect(370, 340, 10, 10);
 
 
-  function drawCrossBig(x, y, size) {
-    strokeWeight(4);
-    line(x, y - size / 2, x, y + size / 2); // Vertical line
-    line(x - size / 2, y, x + size / 2, y); // Horizontal line
   }
 
+  
+  function drawSynthRectanglesSmall (drum) {
+    push();
+    rectMode(CENTER);
+    fill(255, 255);
+    
+    let opacity1 = map(drum - 5, 0, 100, 0, 255);
+    let opacity2 = map(drum - 15, 0, 100, 0, 255);
+    let opacity3 = map(drum - 25, 0, 100, 0, 255);
+   
+    
+    
+    
+
+    fill(255, opacity1);
+    rect(400, 400, 10, 10);
+
+    fill(255, opacity2);
+    rect(400, 370, 10, 10);
+    rect(400, 430, 10, 10);
+    rect(430, 400, 10, 10);
+    rect(370, 400, 10, 10);
+
+    fill(255, opacity3);
+    rect(400, 340, 10, 10);
+    rect(430, 370, 10, 10);
+    rect(460, 400, 10, 10);
+    rect(430, 430, 10, 10);
+    rect(400, 460, 10, 10);
+    rect(370, 430, 10, 10);
+    rect(370, 370, 10, 10);
+    rect(340, 400, 10, 10);
+
+
+  }
 
   
 
