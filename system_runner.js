@@ -1,5 +1,5 @@
-const canvasWidth = 540;
-const canvasHeight = 960;
+const canvasWidth = 800;
+const canvasHeight = 800;
 
 
 let mainCanvas;
@@ -15,6 +15,8 @@ let songIsPlaying = false;
 let songEpoch = 0;              // millis when song starts
 let table;
 let words;
+
+
 
 function songLoadedError() {
   songButton.elt.innerHTML = "Song: Load Error";
@@ -48,10 +50,13 @@ function preload() {
 let volumes = [];
 let volume_length = 0;
 
+let grain;
 function setup() {
   main_canvas = createCanvas(canvasWidth, canvasHeight);
   main_canvas.parent('canvasContainer');
   song = loadSound('song.mp3', songLoaded, songLoadedError, songLoadedSoFar);  
+
+  
   
   frameRate(60);
   angleMode(DEGREES);
