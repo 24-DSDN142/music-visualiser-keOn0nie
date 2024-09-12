@@ -6,4 +6,4 @@ A P5JS framework for running a simple music visualizer, intended as a creative c
 
 Song details: 
 Title = feel something (demo)
-Artist = ke0
+Artist = ke0 (myself)
